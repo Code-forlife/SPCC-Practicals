@@ -1,7 +1,3 @@
-/*
- * Made by:Pranay Singhvi
- */
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -111,7 +107,7 @@ public class main {
                     g.drawLine(x, y + 30, childX, childY);
                     g.setColor(Color.BLACK);
                     g.drawOval(x,y,30,30);
-                    drawTree(g, node.left, childX, childY, level + 1, xOffset / 2);
+                    drawTree(g, node.left, childX, childY, level + 1, xOffset/1);
                 }
                 if (node.right != null) {
                     int childX = x + xOffset / 2;
@@ -119,7 +115,7 @@ public class main {
                     g.drawLine(x, y + 30, childX, childY);
                     g.setColor(Color.BLACK);
                     g.drawOval(x,y,30,30);
-                    drawTree(g, node.right, childX, childY, level + 1, xOffset / 2);
+                    drawTree(g, node.right, childX, childY, level + 1, xOffset/3);
                 }
             }
         }
@@ -128,7 +124,7 @@ public class main {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            drawTree(g, root, getWidth() / 2, 30, 0, getWidth() / 3);
+            drawTree(g, root,getWidth()- getWidth()/5, 30, 0, getWidth() /3);
         }
     }
 
@@ -463,8 +459,12 @@ public class main {
 
         printTransitionTable(table, symbolIndexMap.keySet());
 
+        
         // Parse Tree Animation
         SwingUtilities.invokeLater(() -> new ParseTreeAnimation(root));
+
+        DFAVisualization dfaVisualization = new DFAVisualization(table, symbolIndexMap.keySet());
+        SwingUtilities.invokeLater(() -> dfaVisualization.showDFA());
     }
     static class ParseTreeAnimation extends JFrame {
         public ParseTreeAnimation(TreeNode root) {
@@ -475,9 +475,79 @@ public class main {
             ParseTreePanel treePanel = new ParseTreePanel(root);
             add(treePanel, BorderLayout.CENTER);
 
-            setSize(800, 600);
+            setSize(1600, 800);
             setLocationRelativeTo(null);
             setVisible(true);
+        }
+    }
+}
+class DFAVisualization extends JFrame {
+    private final Map<String, Map<Character, Character>> transitionTable;
+    private final Set<Character> alphabet;
+
+    public DFAVisualization(Map<String, Map<Character, Character>> transitionTable, Set<Character> alphabet) {
+        this.transitionTable = transitionTable;
+        this.alphabet = alphabet;
+    }
+
+    public void showDFA() {
+        setTitle("DFA Visualization");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        DFAPanel dfaPanel = new DFAPanel(transitionTable, alphabet);
+        add(dfaPanel, BorderLayout.CENTER);
+
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+}
+
+class DFAPanel extends JPanel {
+    private final Map<String, Map<Character, Character>> transitionTable;
+    private final Set<Character> alphabet;
+
+    public DFAPanel(Map<String, Map<Character, Character>> transitionTable, Set<Character> alphabet) {
+        this.transitionTable = transitionTable;
+        this.alphabet = alphabet;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int startX = 50;
+        int startY = 50;
+        int stateWidth = 50;
+        int stateHeight = 30;
+
+        // Draw states
+        for (String state : transitionTable.keySet()) {
+            g.drawRect(startX, startY, stateWidth, stateHeight);
+            g.drawString(state, startX + stateWidth / 3, startY + stateHeight / 2);
+            startX += 100;
+        }
+
+        // Draw transitions
+        startX = 75;
+        startY += stateHeight;
+
+        for (char symbol : alphabet) {
+            for (String currentState : transitionTable.keySet()) {
+                String nextState = String.valueOf(transitionTable.get(currentState).get(symbol));
+                g.drawLine(startX, startY, startX + stateWidth, startY);
+                g.drawString(String.valueOf(symbol), startX + stateWidth / 2, startY - 5);
+
+                int nextX = startX + stateWidth / 2;
+                int nextY = startY + 30;
+
+                g.drawString(nextState, nextX - stateWidth / 3, nextY - stateHeight / 2);
+                startX += 100;
+            }
+
+            startX = 75;
+            startY += 60;
         }
     }
 }
