@@ -84,47 +84,47 @@ public class main {
 
         private void drawTree(Graphics g, TreeNode node, int x, int y, int level, int xOffset) {
             if (node != null) {
-                g.drawString(Character.toString(node.symbol), x+10, y+20);
-                g.setColor(Color.GREEN);
-
+                // Draw the oval
+                int ovalWidth = 30;
+                int ovalHeight = 30;
+                g.drawOval(x - ovalWidth / 2, y, ovalWidth, ovalHeight);
+                
+                // Draw the node symbol
+                g.drawString(Character.toString(node.symbol), x - 3, y + 15);
+                g.setColor(new Color(148, 0, 211));
+                // Draw the list next to the node
                 List<Integer> list = List.copyOf(node.firstpos);
                 g.drawString(list.toString(), x + 25, y);
                 g.setColor(Color.red);
+                // Draw the lastpos below the node
                 List<Integer> last = List.copyOf(node.lastpos);
-                g.drawString(last.toString(), x - 40, y+10);
+                g.drawString(last.toString(), x - 30, y + ovalHeight + 12);
                 g.setColor(Color.blue);
-                if (node.nullable == true)
-                {
-                    g.drawString("T", x + 25, y + 15);
-                }
-                else{
-                    g.drawString("F", x + 25, y + 15);
-                }
-                g.setColor(Color.BLACK);
+                // Draw 'T' or 'F' based on nullable
+                g.drawString(node.nullable ? "T" : "F", x + 25, y + ovalHeight + 22);
+                g.setColor(Color.black);
+                // Draw lines and connect child nodes
                 if (node.left != null) {
                     int childX = x - xOffset / 2;
                     int childY = y + 50;
-                    g.drawLine(x, y + 30, childX, childY);
-                    g.setColor(Color.BLACK);
-                    g.drawOval(x,y,30,30);
-                    drawTree(g, node.left, childX, childY, level + 1, xOffset/1);
+                    g.drawLine(x, y + ovalHeight, childX, childY);
+                    drawTree(g, node.left, childX, childY, level + 1, xOffset );
                 }
                 if (node.right != null) {
                     int childX = x + xOffset / 2;
                     int childY = y + 50;
-                    g.drawLine(x, y + 30, childX, childY);
-                    g.setColor(Color.BLACK);
-                    g.drawOval(x,y,30,30);
-                    drawTree(g, node.right, childX, childY, level + 1, xOffset/3);
+                    g.drawLine(x, y + ovalHeight, childX, childY);
+                    drawTree(g, node.right, childX, childY, level + 1, xOffset);
                 }
             }
         }
+        
         
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            drawTree(g, root,getWidth()- getWidth()/5, 30, 0, getWidth() /3);
+            drawTree(g, root,getWidth()- getWidth()/3, 30, 0, getWidth() /6);
         }
     }
 
@@ -475,7 +475,7 @@ public class main {
             ParseTreePanel treePanel = new ParseTreePanel(root);
             add(treePanel, BorderLayout.CENTER);
 
-            setSize(1600, 800);
+            setSize(2400, 800);
             setLocationRelativeTo(null);
             setVisible(true);
         }
@@ -502,54 +502,56 @@ class DFAVisualization extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-}
-
-class DFAPanel extends JPanel {
-    private final Map<String, Map<Character, Character>> transitionTable;
-    private final Set<Character> alphabet;
-
-    public DFAPanel(Map<String, Map<Character, Character>> transitionTable, Set<Character> alphabet) {
-        this.transitionTable = transitionTable;
-        this.alphabet = alphabet;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        int startX = 50;
-        int startY = 50;
-        int stateWidth = 50;
-        int stateHeight = 30;
-
-        // Draw states
-        for (String state : transitionTable.keySet()) {
-            g.drawRect(startX, startY, stateWidth, stateHeight);
-            g.drawString(state, startX + stateWidth / 3, startY + stateHeight / 2);
-            startX += 100;
+    class DFAPanel extends JPanel {
+        private final Map<String, Map<Character, Character>> transitionTable;
+        private final Set<Character> alphabet;
+    
+        public DFAPanel(Map<String, Map<Character, Character>> transitionTable, Set<Character> alphabet) {
+            this.transitionTable = transitionTable;
+            this.alphabet = alphabet;
         }
-
-        // Draw transitions
-        startX = 75;
-        startY += stateHeight;
-
-        for (char symbol : alphabet) {
-            for (String currentState : transitionTable.keySet()) {
-                String nextState = String.valueOf(transitionTable.get(currentState).get(symbol));
-                g.drawLine(startX, startY, startX + stateWidth, startY);
-                g.drawString(String.valueOf(symbol), startX + stateWidth / 2, startY - 5);
-
-                int nextX = startX + stateWidth / 2;
-                int nextY = startY + 30;
-
-                g.drawString(nextState, nextX - stateWidth / 3, nextY - stateHeight / 2);
+    
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+    
+            int startX = 50;
+            int startY = 50;
+            int stateWidth = 50;
+            int stateHeight = 30;
+    
+            // Draw states
+            for (String state : transitionTable.keySet()) {
+                g.drawOval(startX, startY, stateWidth, stateHeight);
+                g.drawString(state, startX + stateWidth / 3, startY + stateHeight / 2);
                 startX += 100;
             }
-
+    
+            // Draw transitions
             startX = 75;
-            startY += 60;
+            startY += stateHeight+40;
+    
+            for (char symbol : alphabet) {
+                if (symbol == '#')
+                    continue;
+                for (String currentState : transitionTable.keySet()) {
+                    String nextState = String.valueOf(transitionTable.get(currentState).get(symbol));
+                    g.drawLine(startX, startY, startX + stateWidth, startY);
+                    g.drawString(String.valueOf(symbol), startX + stateWidth / 2, startY - 5);
+    
+                    int nextX = startX + stateWidth / 2;
+                    int nextY = startY + 30;
+    
+                    g.drawString(nextState, nextX - stateWidth / 3, nextY - stateHeight / 2);
+                    startX += 100;
+                }
+    
+                startX = 75;
+                startY += 60;
+            }
         }
-    }
+    }    
+    
 }
 
 
