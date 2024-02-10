@@ -74,7 +74,27 @@ public class main {
             System.out.println();
         }
     }
-
+    static void printTree(TreeNode root) {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("| %-5s | %-14s | %-15s | %-9s | %-12s | %-8s |\n",
+                "Value", "Left Child", "Right Child", "Nullable", "Firstpos", "Lastpos");
+        System.out.println("----------------------------------------------------------------------------------");
+        printTee(root);
+        System.out.println("----------------------------------------------------------------------------------");
+    }
+    
+    static void printTee(TreeNode n) {
+        if (n == null) {
+            return;
+        }
+        System.out.printf("| %-5s | %-14s | %-15s | %-9s | %-12s | %-8s |\n",
+                n.symbol, (n.left != null) ? n.left.symbol : "null",
+                (n.right != null) ? n.right.symbol : "null", n.nullable,
+                n.firstpos, n.lastpos);
+        printTee(n.left);
+        printTee(n.right);
+    }
+    
     static class ParseTreePanel extends JPanel {
         private TreeNode root;
 
@@ -431,10 +451,10 @@ public class main {
 
         computeFunctions(root);
 
-        System.out.println("\nPrinting Every Node detail inorder:\n");
-        inorder(root);
+        // System.out.println("\nPrinting Every Node detail inorder:\n");
+        // inorder(root);
         System.out.println();
-
+        printTree(root);
         Map<Integer, Set<Integer>> followposMap = new HashMap<>();
         int leaves = countLeaves(root);
 
@@ -443,11 +463,16 @@ public class main {
         }
         computeFollowpos(root, followposMap);
 
-        System.out.println("followpos(n):\n");
+        System.out.println("\nFollowpos Table");
+        System.out.println("----------------------------");
+        System.out.printf("| %-9s | %-12s |\n", "Position", "Followpos");
+        System.out.println("----------------------------");
 
-        for (int n : followposMap.keySet()) {
-            System.out.println(n + ": " + followposMap.get(n).toString());
+        for (int position : followposMap.keySet()) {
+            System.out.printf("| %-9d | %-12s |\n", position, followposMap.get(position));
         }
+
+        System.out.println("----------------------------");
 
         Map<Character, Set<Integer>> symbolIndexMap = new HashMap<>();
         mapSymbolToIndices(root, symbolIndexMap);
