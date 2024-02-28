@@ -1,0 +1,141 @@
+Grammar
+
+    0 $accept: stmt $end
+
+    1 stmt: B direction_list '\n'
+    2     | B direction_list
+
+    3 direction_list: direction
+    4               | direction_list direction
+
+    5 direction: N
+    6          | E
+    7          | S
+    8          | W
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'\n' (10) 1
+error (256)
+N (258) 5
+E (259) 6
+S (260) 7
+W (261) 8
+B (262) 1 2
+
+
+Nonterminals, with rules where they appear
+
+$accept (9)
+    on left: 0
+stmt (10)
+    on left: 1 2, on right: 0
+direction_list (11)
+    on left: 3 4, on right: 1 2 4
+direction (12)
+    on left: 5 6 7 8, on right: 3 4
+
+
+state 0
+
+    0 $accept: . stmt $end
+
+    B  shift, and go to state 1
+
+    stmt  go to state 2
+
+
+state 1
+
+    1 stmt: B . direction_list '\n'
+    2     | B . direction_list
+
+    N  shift, and go to state 3
+    E  shift, and go to state 4
+    S  shift, and go to state 5
+    W  shift, and go to state 6
+
+    direction_list  go to state 7
+    direction       go to state 8
+
+
+state 2
+
+    0 $accept: stmt . $end
+
+    $end  shift, and go to state 9
+
+
+state 3
+
+    5 direction: N .
+
+    $default  reduce using rule 5 (direction)
+
+
+state 4
+
+    6 direction: E .
+
+    $default  reduce using rule 6 (direction)
+
+
+state 5
+
+    7 direction: S .
+
+    $default  reduce using rule 7 (direction)
+
+
+state 6
+
+    8 direction: W .
+
+    $default  reduce using rule 8 (direction)
+
+
+state 7
+
+    1 stmt: B direction_list . '\n'
+    2     | B direction_list .
+    4 direction_list: direction_list . direction
+
+    N     shift, and go to state 3
+    E     shift, and go to state 4
+    S     shift, and go to state 5
+    W     shift, and go to state 6
+    '\n'  shift, and go to state 10
+
+    $default  reduce using rule 2 (stmt)
+
+    direction  go to state 11
+
+
+state 8
+
+    3 direction_list: direction .
+
+    $default  reduce using rule 3 (direction_list)
+
+
+state 9
+
+    0 $accept: stmt $end .
+
+    $default  accept
+
+
+state 10
+
+    1 stmt: B direction_list '\n' .
+
+    $default  reduce using rule 1 (stmt)
+
+
+state 11
+
+    4 direction_list: direction_list direction .
+
+    $default  reduce using rule 4 (direction_list)
