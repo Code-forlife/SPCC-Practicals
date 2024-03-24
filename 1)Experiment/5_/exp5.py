@@ -1,7 +1,33 @@
 from prettytable import PrettyTable
 
-def is_op(char):
-    return char in ["+", "-", "*", "/", "^", "="]
+def is_operator(char):
+    return char in ['+', '-', '*', '/', '^', '=']
+
+def precedence(op):
+    precedence_dict = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+    return precedence_dict.get(op, 0)
+
+def infix_to_postfix(infix_exp):
+    postfix_exp = []
+    stack = []
+    for char in infix_exp:
+        if char.isalnum():  # Operand
+            postfix_exp.append(char)
+        elif char == '(':
+            stack.append(char)
+        elif char == ')':
+            while stack and stack[-1] != '(':
+                postfix_exp.append(stack.pop())
+            stack.pop()  # Discard '('
+        else:  # Operator
+            while stack and precedence(stack[-1]) >= precedence(char):
+                postfix_exp.append(stack.pop())
+            stack.append(char)
+    
+    while stack:
+        postfix_exp.append(stack.pop())
+    
+    return ''.join(postfix_exp)
 
 def display_quadruple(quadruples):
     table = PrettyTable()
@@ -18,7 +44,7 @@ def postfix_to_quadruple(exp):
     for char in exp:
         if char.isalnum():
             stack.append(char)
-        elif is_op(char):
+        elif is_operator(char):
             op2 = stack.pop()
             op1 = stack.pop()
             temp_var = "T" + str(temp)
@@ -28,9 +54,11 @@ def postfix_to_quadruple(exp):
     return quadruples
 
 def main():
-    exp = input("Enter the postfix expression: ")
+    infix_exp = input("Enter the infix expression: ")
+    postfix_exp = infix_to_postfix(infix_exp)
+    print("Postfix Expression:", postfix_exp)
     
-    quadruples = postfix_to_quadruple(exp)
+    quadruples = postfix_to_quadruple(postfix_exp)
     display_quadruple(quadruples)
 
 if __name__ == "__main__":
