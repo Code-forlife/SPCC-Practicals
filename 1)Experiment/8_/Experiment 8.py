@@ -295,7 +295,7 @@ for line in file:
 
 file.close()
 
-file = open("Machine Code.txt", "x")
+file = open("./Machine Code.txt", "x")
 
 file.write("------------\nMACHINE CODE\n------------\n\n")
 

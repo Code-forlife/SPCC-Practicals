@@ -61,7 +61,7 @@ class CodeGenerator:
 table = pt.PrettyTable(["Statement", "Generated Code", "Register Descriptor", "Address Descriptor"])
 
 codegen = CodeGenerator()
-statements = ["t = a - b", "u = a - c","v = t + u","d = v + u"]
+statements = ["t = a - b", "u = a - c","v = t + u","g = v + u"]
 
 def find_next_use(x,index):
     if index+1 == len(statements) and x == letters[-1]:
@@ -71,6 +71,7 @@ def find_next_use(x,index):
             return True
     return False
 letters = [x[0] for x in statements ]
+
 # Generate code and populate the table
 for i, statement in enumerate(statements):
     generated_code = codegen.generate_code(statement, is_last_statement=(i == len(statements) - 1))
