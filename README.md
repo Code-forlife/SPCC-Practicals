@@ -1,43 +1,70 @@
-# System Programming and Compiler Construction Experiments
+# System Programming and Complier Construction 
 
-This repository contains experiments related to concepts in system programming and compiler construction.
+This repository contains the source code and documentation for ten labs exploring various aspects of compiler design. The labs cover topics from lexical analysis to code generation and linking/loading.
 
-## Experiments Covered
+## Experiments
 
-* **Experiment 1: Lexical Analysis** 
-   - Implementation of a lexical analyzer (or scanner) to tokenize a given input source code.
-* **Experiment 2: Parse Tree Construction**
-   - Construction of a parse tree using a suitable parsing technique (e.g., top-down or bottom-up parsing).
+**1. Lexical Analyzer for Programming Languages**
 
-## Technologies Used
+* Implements a lexical analyzer using the lex tool for a specific programming language (e.g., C, Python, Java).
+* Identifies and classifies tokens (keywords, identifiers, operators, literals).
+* Provides a foundation for further compiler stages.
 
-* [Programming Language] (Provide the specific language used for development)
-* [Lexical Analyzer Tool (If applicable)] 
-* [Parser Generator Tool (If applicable)]
+**2. Optimization of DFA-Based Pattern Matchers**
 
-## How to Run Experiments
+* Explores techniques for optimizing Deterministic Finite Automata (DFA) used for pattern matching in regular expressions.
+* Improves efficiency of the lexical analyzer.
 
-1. **Clone Repository:**
-   ```bash
-   git clone https://github.com/[your-username]/[repository-name]
-   ```
+**3. LL(1) and SLR Parser Generation**
 
-2. **Install Dependencies (If necessary):**
-   ```bash
-   # Instructions to install any required dependencies
-   ```
+* Implements programs to generate parsers for context-free grammars using LL(1) and SLR parsing techniques.
+* Verifies the syntax of programs.
 
-3. **Running the Experiments:**
-   ```bash
-   # Provide commands or instructions to execute each experiment 
-   ```
+**4. SDT Implementation using Lex/Yacc**
 
-## Contributing
+* Demonstrates the use of lex and yacc tools to implement a Semantic Directed Translator (SDT) for a specific programming language.
+* Performs semantic analysis and code generation during parsing.
 
-Contributions are welcome! Feel free to submit pull requests for additional experiments, bug fixes, or improved documentation.
+**5. Three-Address Code Generation**
 
-## Contact
+* Develops programs to generate three-address code for various programming language constructs (e.g., expressions, statements, control flow).
+* Serves as an intermediate representation for optimization and code generation.
 
-If you have any questions, please feel free to open an issue on this repository or contact me at [your_email].
+**6. Basic Block Identification and Flow Graph Generation**
 
-**Keywords:** system programming, compiler construction, lexical analysis, parsing, parse tree 
+* Implements algorithms to find basic blocks (sequences of instructions without jumps) in three-address code.
+* Constructs a control flow graph to represent program flow.
+
+**7. Code Generation Algorithm**
+
+* Investigates code generation techniques to translate three-address code into machine code for a specific target architecture.
+* Optimizes the generated code for efficiency.
+
+**8. Two-Pass Assembler**
+
+* Designs and implements a two-pass assembler that translates assembly language instructions into machine code.
+* Resolves symbolic references in the second pass.
+
+**9. Two-Pass Macro Processor**
+
+* Creates a two-pass macro processor that expands macro definitions during assembly.
+* Provides modularity and code reuse.
+
+**10. Linker/Loader Design**
+
+* Explores the design principles of a linker/loader.
+* Links object files together and loads the combined program into memory for execution.
+
+## Getting Started
+
+1. **Clone the Repository:** Use `git clone https://github.com/Code-forlife/SPCC-Practicals` to clone this repository.
+2. **Set Up Environment:** Install any necessary tools (e.g., lex, yacc) based on lab requirements.
+3. **Explore Labs:** Each lab folder contains source code, makefiles, and documentation (if available).
+4. **Run Labs:** Follow instructions in individual lab folders to compile and execute programs.
+
+
+## Learning Resources
+
+* [https://www.geeksforgeeks.org/compiler-design-tutorials/](https://www.geeksforgeeks.org/compiler-design-tutorials/)
+* [https://www.amazon.com/Compilers-Principles-Techniques-Alfred-Aho/dp/0201100886](https://www.amazon.com/Compilers-Principles-Techniques-Alfred-Aho/dp/0201100886)
+* [https://www.amazon.com/lex-yacc-Doug-Brown/dp/1565920007](https://www.amazon.com/lex-yacc-Doug-Brown/dp/1565920007)
